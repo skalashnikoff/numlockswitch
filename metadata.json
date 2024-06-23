@@ -1,0 +1,10 @@
+{
+  "name": "NumLock Switch",
+  "description": "Simply NumLock switch for X11",
+  "uuid": "numlockswitch@skalashnikoff.github.com",
+  "url": "https://github.com/skalashnikoff/numlockswitch",
+  "shell-version": [
+    "44"
+  ],
+  "session-modes": ["user", "unlock-dialog"]
+}
