@@ -21,15 +21,11 @@ const Indicator = GObject.registerClass(
             this.numIcon = new St.Icon({
                 style_class: 'system-status-icon',
             })
+            this.numIcon.gicon = Gio.icon_new_for_string(`${Me.path}/icons/numlock-symbolic.svg`);
             this.add_child(this.numIcon);
 
             this.menu.toggle = () => { Util.spawn(['xdotool', 'key', 'Num_Lock']); };
 
-        }
-
-        getCustIcon(icon_name) {
-            let icon_path = Me.dir.get_child('icons').get_child(icon_name + ".svg").get_path();
-            return Gio.FileIcon.new(Gio.File.new_for_path(icon_path));
         }
 
         setActive(enabled) {
@@ -44,10 +40,9 @@ const Indicator = GObject.registerClass(
 
         updateState() {
             if (Keymap.get_num_lock_state())
-                this.numIcon.set_gicon(this.getCustIcon('numlock-enabled-symbolic'));
+                this.numIcon.set_style_class_name("system-status-icon enable-style");
             else
-                this.numIcon.set_gicon(this.getCustIcon('numlock-disabled-symbolic'));
-
+                this.numIcon.set_style_class_name("system-status-icon disable-style");
         }
     });
 

@@ -1,1 +1,7 @@
-/* Add your custom extension styling here */
+.enable-style {
+    color: green;
+}
+
+.disable-style {
+    color: gray;
+}
