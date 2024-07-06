@@ -1,11 +1,8 @@
-const GETTEXT_DOMAIN = 'numlockswitch';
-
 const { GObject, St, Clutter, Gio } = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
@@ -18,7 +15,7 @@ const _ = ExtensionUtils.gettext;
 const Indicator = GObject.registerClass(
     class Indicator extends PanelMenu.Button {
         _init() {
-            super._init(0.0, _('NumLock Indicator'));
+            super._init(0.0, 'NumLock Switcher', true);
             this._keyboardStateChangedId = null;
 
             this.numIcon = new St.Icon({
@@ -26,12 +23,8 @@ const Indicator = GObject.registerClass(
             })
             this.add_child(this.numIcon);
 
-            let item = new PopupMenu.PopupMenuItem(_('Switch NumLock'));
-            item.connect('activate', () => {
-                Util.spawn(['xdotool', 'key', 'Num_Lock']);
-            });
-            this.menu.addMenuItem(item);
-            this.updateState()
+            this.menu.toggle = () => { Util.spawn(['xdotool', 'key', 'Num_Lock']); };
+
         }
 
         getCustIcon(icon_name) {
@@ -42,6 +35,7 @@ const Indicator = GObject.registerClass(
         setActive(enabled) {
             if (enabled) {
                 this._keyboardStateChangedId = Keymap.connect('state-changed', this.updateState.bind(this));
+                this.updateState()
             } else {
                 Keymap.disconnect(this._keyboardStateChangedId);
                 this._keyboardStateChangedId = null;
@@ -49,8 +43,7 @@ const Indicator = GObject.registerClass(
         }
 
         updateState() {
-            let numlock_state = Keymap.get_num_lock_state();
-            if (numlock_state)
+            if (Keymap.get_num_lock_state())
                 this.numIcon.set_gicon(this.getCustIcon('numlock-enabled-symbolic'));
             else
                 this.numIcon.set_gicon(this.getCustIcon('numlock-disabled-symbolic'));
@@ -61,7 +54,6 @@ const Indicator = GObject.registerClass(
 class Extension {
     constructor(uuid) {
         this._uuid = uuid;
-        ExtensionUtils.initTranslations(GETTEXT_DOMAIN);
     }
 
     enable() {

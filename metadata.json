@@ -4,7 +4,9 @@
   "uuid": "numlockswitch@skalashnikoff.github.com",
   "url": "https://github.com/skalashnikoff/numlockswitch",
   "shell-version": [
-    "44"
+    "44",
+    "45",
+    "46"
   ],
   "session-modes": ["user", "unlock-dialog"]
 }
